@@ -36,3 +36,15 @@ nav ul li a {
     display: block;
     font-size: 1rem;
 }
+
+main {
+    padding: 1rem;
+}
+
+section {
+    margin-bottom: 1rem;
+}
+
+footer {
+    padding: 1rem;
+}
