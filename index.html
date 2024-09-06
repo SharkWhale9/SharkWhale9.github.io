@@ -8,11 +8,13 @@
 </head>
 <body>
     <header>
+        <div class="menu-toggle">Menu</div>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="books.html">Books</a></li>
                 <li><a href="origami.html">Origami</a></li>
+                <li><a href="concerts.html">Concerts</a></li>
             </ul>
         </nav>
     </header>
@@ -24,7 +26,7 @@
             <br>I'm majoring in Statistics as I'm interested in Probability and Statistics. 
             I'm still in the middle of figuring out a plan on what to study. 
             I'm considering a specialisation in data science to improve my employability after graduation. 
-            This should leave me with enough credits to pursue a minor, but I'm currently unsure on what subject I should pursue...</p>
+            I might consider a minor in Physics</p>
         </section>
         <section>
             <h3>Hobbies</h3>
@@ -36,12 +38,21 @@
         <section>
             <p><strong>Disclaimer</strong>
                 <br>This website is still mostly work in progress and I will try to include more things inside. I would like to give special thanks to ChatGPT for making 90% of this website!
-                <br>I'm currently out of ideas on what to put on this website so it shall remain like this until I figure something out.
+                <br>I am a beginner at programming and only recently started learning html and css. I will try my best to learn so as to not be too reliant on ChatGPT in the future but for now I'll abuse it as much as I can :D
             </p>
         </section>
     </main>
     <footer>
         <p>&copy; 2024 WhaleShark. All rights reserved.</p>
     </footer>
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav ul');
+    
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

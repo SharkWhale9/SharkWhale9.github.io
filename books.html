@@ -8,11 +8,13 @@
 </head>
 <body>
     <header>
+        <div class="menu-toggle">Menu</div>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="books.html">Books</a></li>
                 <li><a href="origami.html">Origami</a></li>
+                <li><a href="concerts.html">Concerts</a></li>
             </ul>
         </nav>
     </header>
@@ -22,7 +24,7 @@
             <p>Currently I'm listing out the books randomly, I'll sort the list when i feel like it...
             <br> I might add book reviews here as well or I'll make another page for that
             </p>
-            
+        
             <h3>Textbooks</h3>
             <ul>
                 <li><em>The Tools of Mathematical Reasoning</em> (by Tamara J. Lakins)</li>
@@ -56,7 +58,7 @@
                 <li><em>Competitive Physics: Mechanics And Waves</em> (by Wang Jinhui & Bernard Ricardo)</li>
             </ul>
 
-            <h3>Philosophy and Religion???</h3>
+            <h3>Philosophy???</h3>
             <ul>
                 <li><em>道德经</em> (by 老子)</li>
                 <li><em>A Guide to the Good Life: The Ancient Art of Stoic Joy</em> (by William B. Irvine)</li>
@@ -65,10 +67,9 @@
             </ul>
 
             <h3>Dishonourable Mentions</h3>
-            <ul>
-                <li><em>The Subtle Art of Not Giving a F***</em> (By Mark Manson)</li>
-                <li><em>Everything is F***ed: A Book About Hope</em> (By Mark Manson)</li>
-            </ul>
+            <li><em>The Subtle Art of Not Giving a F***</em> (By Mark Manson)</li>
+            <li><em>Everything is F***ed: A Book About Hope</em> (By Mark Manson)</li>
+
 
             <h3>Reading List</h3>
             <ul>
@@ -77,5 +78,14 @@
                 <li><em>The Heart of the Buddha's Teaching</em> (by Thich Nhat Hanh)</li>
         </section>
     </main>
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav ul');
+    
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
