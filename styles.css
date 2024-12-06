@@ -75,7 +75,7 @@ footer {
 
 .image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); /* Responsive columns */
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); /* Responsive columns */
     align-items: center;
     justify-items: center;
     gap: 50px; /* Space between images */
