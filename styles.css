@@ -75,13 +75,13 @@ footer {
 
 .image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); /* Responsive columns */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
     align-items: center;
     justify-items: center;
     gap: 50px; /* Space between images */
 }
 
 .image-grid img {
-    height: 400px;
+    height: 300px;
     width: auto;
 }
