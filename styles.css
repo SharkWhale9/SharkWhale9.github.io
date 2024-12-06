@@ -73,15 +73,15 @@ footer {
     padding: 1rem;
 }
 
-.origami-grid {
+.image-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); /* Responsive columns */
     align-items: center;
     justify-content: center;
-    gap: 10px; /* Space between images */
+    gap: 50px; /* Space between images */
 }
 
-.origami-grid img {
+.image-grid img {
     max-width: 100%;
     height: auto;
 }
