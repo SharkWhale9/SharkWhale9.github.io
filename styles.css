@@ -14,6 +14,16 @@ p {
     text-align: justify;
 }
 
+ul {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-left: 25px; 
+}
+
+h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 .wrapper {
     flex: 1;
 }
