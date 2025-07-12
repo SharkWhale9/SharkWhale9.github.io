@@ -1522,7 +1522,8 @@ button,
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
-  white-space: nowrap; }
+  white-space: nowrap; 
+  margin-bottom: 0.25em; }
   input[type="submit"]:hover,
   input[type="reset"]:hover,
   input[type="button"]:hover,
