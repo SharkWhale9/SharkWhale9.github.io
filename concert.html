@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>WhaleSharkBlog</title>
+		<title>Concert</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -112,12 +112,15 @@
 		<!-- Back To Top Button-->
 			<a href="#" id="back-to-top" title="Back to top"><i class="fas fa-chevron-up"></i></a>
 
+
 		<!-- Lightbox-->
 			<div id="lightbox" class="lightbox hidden">
+				<button class="lightbox-nav left" id="prev-btn">&#10094;</button>
 				<div class="lightbox-content">
-					<button id="lightbox-close" class="lightbox-close">✕</button>
-					<img id="lightbox-img" src="" alt="full view">
+					<img id="lightbox-img" src="" alt="Lightbox image" />
+					<button class="lightbox-close" id="lightbox-close">&times;</button>
 				</div>
+				<button class="lightbox-nav right" id="next-btn">&#10095;</button>
 			</div>
 		
 		<!-- Scripts -->
@@ -130,18 +133,53 @@
 				const lightbox = document.getElementById('lightbox');
 				const lightboxImg = document.getElementById('lightbox-img');
 				const closeBtn = document.getElementById('lightbox-close');
+				const prevBtn = document.getElementById('prev-btn');
+				const nextBtn = document.getElementById('next-btn');
 
-				document.querySelectorAll('.img-container img').forEach(img => {
-					img.addEventListener('click', () => {
+				const images = Array.from(document.querySelectorAll('.img-container img'));
+				let currentIndex = 0;
+
+				function showImage(index) {
+					const img = images[index];
 					const fullSrc = img.getAttribute('data-full') || img.src;
 					lightboxImg.src = fullSrc;
+					currentIndex = index;
+				}
+
+				function openLightbox(index) {
+					showImage(index);
 					lightbox.classList.remove('hidden');
+					document.body.classList.add('lightbox-active');  // disable sidebar toggle
+					// Block scrolling on body while lightbox is open
+					document.body.style.overflow = 'hidden';
+				}
+
+				function closeLightbox() {
+					lightbox.classList.add('hidden');
+					lightboxImg.src = '';
+					document.body.classList.remove('lightbox-active');  // enable sidebar toggle
+					// Restore scrolling
+					document.body.style.overflow = '';
+				}
+
+				images.forEach((img, index) => {
+					img.addEventListener('click', () => {
+					openLightbox(index);
 					});
 				});
 
 				closeBtn.addEventListener('click', () => {
-					lightbox.classList.add('hidden');
-					lightboxImg.src = '';
+					closeLightbox();
+				});
+
+				prevBtn.addEventListener('click', () => {
+					currentIndex = (currentIndex - 1 + images.length) % images.length;
+					showImage(currentIndex);
+				});
+
+				nextBtn.addEventListener('click', () => {
+					currentIndex = (currentIndex + 1) % images.length;
+					showImage(currentIndex);
 				});
 			</script>
 			<script>
