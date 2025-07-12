@@ -2299,7 +2299,8 @@ body.lightbox-active #sidebar .toggle {
   .masonry {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35em;
+    gap: 1em;
+    border-radius: 12px;
     justify-content: center;
   }
 
@@ -2319,7 +2320,7 @@ body.lightbox-active #sidebar .toggle {
     object-fit: contain;
     display: block;
     border: 1.5px solid #bbb;
-    border-radius: 6px;
+    border-radius: 12px;
     background-color: white;
     transition: transform 0.3s ease;
   }
