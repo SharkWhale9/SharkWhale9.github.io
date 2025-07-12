@@ -188,12 +188,32 @@
 					</div>
 			</div>
 
+        <!-- Back To Top Button-->
+			<a href="#" id="back-to-top" title="Back to top"><span class="icon fa-chevron-up"></span></a>
+
+
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+            <script>
+				// Show button after scrolling down 200px
+				window.addEventListener('scroll', function () {
+					const backToTop = document.getElementById('back-to-top');
+					if (window.scrollY >300) {
+					backToTop.style.display = 'block';
+					} else {
+					backToTop.style.display = 'none';
+					}
+				});
 
+				// Smooth scroll to top when clicked
+				document.getElementById('back-to-top').addEventListener('click', function (e) {
+					e.preventDefault();
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+				});
+			</script>
 	</body>
 </html>

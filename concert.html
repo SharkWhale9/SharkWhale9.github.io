@@ -6,6 +6,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	</head>
 	<body class="is-preload">
 
@@ -18,7 +19,10 @@
 
 							<!-- Header -->
 								<header id="header">
-									<a href="index.html" class="logo"><strong>WhaleSharkBlog</strong></a>
+									<nav class="scroll-buttons">
+										<button onclick="document.getElementById('ive-section').scrollIntoView({behavior: 'smooth'})">IVE - Show What I Have</button>
+										<button onclick="document.getElementById('aespa-section').scrollIntoView({behavior: 'smooth'})">Aespa - Synk: Parallel Line</button>
+									</nav>
 								</header>
 
 							<!-- Banner -->
@@ -32,7 +36,7 @@
 								</section>
 
 							<!-- IVE Section -->
-								<section>
+								<section id="ive-section">
 									<header class="major">
 										<h2>IVE - Show What I Have (24/02/24)</h2>
 									</header>
@@ -48,7 +52,7 @@
 								</section>
 
 							<!-- Aespa Section -->
-								<section>
+								<section id="aespa-section">
 									<header class="major">
 										<h2>Aespa - Synk: Parallel Line (20/07/24)</h2>
 									</header>
@@ -104,6 +108,9 @@
 						</div>
 					</div>
 			</div>
+		
+		<!-- Back To Top Button-->
+			<a href="#" id="back-to-top" title="Back to top"><span class="icon fa-chevron-up"></span></a>
 
 		<!-- Lightbox-->
 			<div id="lightbox" class="lightbox hidden">
@@ -137,7 +144,23 @@
 					lightboxImg.src = '';
 				});
 			</script>
+			<script>
+				// Show button after scrolling down 200px
+				window.addEventListener('scroll', function () {
+					const backToTop = document.getElementById('back-to-top');
+					if (window.scrollY >300) {
+					backToTop.style.display = 'block';
+					} else {
+					backToTop.style.display = 'none';
+					}
+				});
 
+				// Smooth scroll to top when clicked
+				document.getElementById('back-to-top').addEventListener('click', function (e) {
+					e.preventDefault();
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+				});
+			</script>
 
 	</body>
 </html>

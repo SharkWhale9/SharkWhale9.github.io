@@ -1244,18 +1244,23 @@ input[type="radio"] + label:before {
     .image.main img {
       width: 100%; }
 
-a.image {
-  overflow: hidden; }
-  a.image img {
-    -moz-transition: -moz-transform 0.2s ease;
-    -webkit-transition: -webkit-transform 0.2s ease;
-    -ms-transition: -ms-transform 0.2s ease;
-    transition: transform 0.2s ease; }
-  a.image:hover img {
-    -moz-transform: scale(1.075);
-    -webkit-transform: scale(1.075);
-    -ms-transform: scale(1.075);
-    transform: scale(1.075); }
+
+.hobby-image {
+  overflow: hidden;
+  max-width: 100%;
+  border-radius: 0.375em;
+}
+
+.hobby-image img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+.hobby-image:hover img {
+  transform: scale(1.075);
+}
 
 /* List */
 ol {
@@ -2374,8 +2379,34 @@ button,
   color: #ccc;
 }
 
-
 .lightbox-close:hover {
   color: #ccc;
 }
 
+#back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 48px;
+  height: 48px;
+  line-height: 48px;       /* vertical center */
+  background-color: #7fd9ff;
+  color: white;
+  font-size: 1em;
+  text-align: center;      /* horizontal center */
+  border-radius: 12px;
+  cursor: pointer;
+  z-index: 1000;
+  display: none;           /* initially hidden */
+  text-decoration: none;   /* remove underline */
+  outline: none;           /* remove focus outline */
+  padding: 0;              /* no padding to keep square shape */
+  transition: background-color 0.3s ease;
+}
+
+#back-to-top:hover,
+#back-to-top:focus {
+  background-color: #efefef;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
