@@ -2319,7 +2319,6 @@ body.lightbox-active #sidebar .toggle {
     height: auto;
     object-fit: contain;
     display: block;
-    border: 1.5px solid #bbb;
     border-radius: 12px;
     background-color: white;
     transition: transform 0.3s ease;
