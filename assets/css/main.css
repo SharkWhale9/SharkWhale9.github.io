@@ -1244,7 +1244,6 @@ input[type="radio"] + label:before {
     .image.main img {
       width: 100%; }
 
-
 .hobby-image {
   overflow: hidden;
   max-width: 100%;
@@ -1524,6 +1523,7 @@ button,
   text-transform: uppercase;
   white-space: nowrap; 
   margin-bottom: 0.25em; }
+
   input[type="submit"]:hover,
   input[type="reset"]:hover,
   input[type="button"]:hover,
@@ -2083,6 +2083,12 @@ button,
         top: 1em;
         width: 5em; } }
 
+/* Disable sidebar toggle button when lightbox is active */
+body.lightbox-active #sidebar .toggle {
+  pointer-events: none;   /* disables clicks */
+  opacity: 0;           /* visually dim */
+  cursor: default;
+}
 /* Header */
 #header {
   display: -moz-flex;
@@ -2321,6 +2327,10 @@ button,
   transform: scale(1.05);
 }
 
+/* Prevent background scrolling */
+body.no-scroll {
+  overflow: hidden;
+}
 
 /* Lightbox base */
 .lightbox {
@@ -2341,7 +2351,7 @@ button,
   display: none;
 }
 
-/* Lightbox content */
+/* Content inside the lightbox */
 .lightbox-content {
   position: relative;
 }
@@ -2351,19 +2361,19 @@ button,
   max-height: 90vh;
   border-radius: 8px;
   background-color: white;
-  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 /* Close button */
 .lightbox-close {
-  position: absolute;
+  position: fixed;   /* change from absolute to fixed */
   top: 8px;
   right: 8px;
   background: transparent;
   color: white;
-  border: none !important;        /* force no border */
-  outline: none !important;       /* force no outline */
-  box-shadow: none !important;    /* remove any shadow */
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   font-size: 32px;
   font-weight: 300;
   font-family: Arial, sans-serif;
@@ -2373,14 +2383,42 @@ button,
   text-align: center;
   padding: 0;
   line-height: 1;
-  z-index: 1;
+  z-index: 9999;     /* higher to stay on top */
 }
+
 
 .lightbox-close:hover {
   color: #ccc;
 }
 
-.lightbox-close:hover {
+/* Navigation buttons (now fixed to screen edges) */
+.lightbox-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;          /* already present */
+  outline: none;         /* add this to remove focus outline */
+  box-shadow: none;      /* remove any shadow that may look like border */
+  color: white;
+  font-size: 3em;
+  padding: 0 0.2em;
+  cursor: pointer;
+  z-index: 2;
+  user-select: none;
+  font-weight: 100;          /* makes font thinner */
+  font-family: "Arial", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.lightbox-nav.left {
+  left: 20px;
+}
+
+.lightbox-nav.right {
+  right: 20px;
+}
+
+.lightbox-nav:hover {
   color: #ccc;
 }
 
@@ -2410,4 +2448,58 @@ button,
   background-color: #efefef;
   outline: none;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.slideshow-container {
+  position: relative;
+  max-width: 800px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 1em;
+}
+
+.slide {
+  display: none;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+  border-radius: 1em;
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  padding: 0.5em;
+  font-size: 2em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 0.3em;
+  user-select: none;
+  transform: translateY(-50%);
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.fade {
+  animation: fadeEffect 0.4s;
+}
+
+@keyframes fadeEffect {
+  from {opacity: 0.3;}
+  to {opacity: 1;}
 }
