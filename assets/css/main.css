@@ -2313,8 +2313,9 @@ body.lightbox-active #sidebar .toggle {
   }
 
   .img-container img {
-    height: 280px;
-    width: auto;
+    width: 90vw;       /* 90% of viewport width, or use max-width */
+    max-width: 400px;  /* optional max width for very large phones */
+    height: auto;
     object-fit: contain;
     display: block;
     border: 1.5px solid #bbb;
