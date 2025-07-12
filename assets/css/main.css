@@ -2294,31 +2294,98 @@ body.lightbox-active #sidebar .toggle {
     padding-top: 0; }
 
 /* Masonry Grid */
-.masonry {
-  column-count: 3;       /* Number of vertical columns */
-  column-gap: 12px;      /* Space between columns */
+/* Mobile: up to 480px */
+@media (max-width: 480px) {
+  .masonry {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em;
+    justify-content: center;
+  }
+
+  .img-container {
+    flex: 0 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    overflow: hidden;
+  }
+
+  .img-container img {
+    height: 280px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    border: 1.5px solid #bbb;
+    border-radius: 6px;
+    background-color: white;
+    transition: transform 0.3s ease;
+  }
+
+  .img-container img:hover {
+    transform: scale(1.05);
+  }
 }
 
-.img-container {
-  break-inside: avoid;   /* Prevent image from breaking across columns */
-  margin-bottom: 16px;   /* Space between stacked items */
-  border-radius: 12px;
-  padding: 4px;
+/* Tablet/landscape: 481px to 980px */
+@media (min-width: 481px) and (max-width: 980px) {
+  .masonry {
+    column-count: 2;
+    column-gap: 12px;
+  }
+
+  .img-container {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    padding: 4px;
+  }
+
+  .img-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 12px;
+    background-color: white;
+    transition: transform 0.3s ease;
+  }
+
+  .img-container img:hover {
+    transform: scale(1.015);
+  }
 }
 
-.img-container img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  display: block;
-  border-radius: 12px;
-  background-color: white;
-  transition: transform 0.3s ease;
+/* Laptop and up: 981px and above */
+@media (min-width: 981px) {
+  .masonry {
+    column-count: 3;
+    column-gap: 12px;
+  }
+
+  .img-container {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    padding: 4px;
+  }
+
+  .img-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 12px;
+    background-color: white;
+    transition: transform 0.3s ease;
+  }
+
+  .img-container img:hover {
+    transform: scale(1.015);
+  }
 }
 
-.img-container img:hover {
-  transform: scale(1.015);
-}
 
 /* Prevent background scrolling */
 body.no-scroll {
