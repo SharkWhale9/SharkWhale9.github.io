@@ -2298,24 +2298,22 @@ body.lightbox-active #sidebar .toggle {
 @media (max-width: 480px) {
   .masonry {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;   /* Force 1 column */
     gap: 1em;
-    border-radius: 12px;
-    justify-content: center;
+    align-items: center;      /* Center items horizontally */
   }
 
   .img-container {
-    flex: 0 1 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
-    overflow: hidden;
+    width: 90vw;              /* Consistent width */
+    max-width: 400px;
+    margin: 0 auto;           /* Optional: ensures horizontal centering */
+    display: block;
+    border-radius: 12px;
+    padding: 0;               /* Remove extra spacing from flex layout */
   }
 
   .img-container img {
-    width: 90vw;       /* 90% of viewport width, or use max-width */
-    max-width: 400px;  /* optional max width for very large phones */
+    width: 100%;
     height: auto;
     object-fit: contain;
     display: block;
