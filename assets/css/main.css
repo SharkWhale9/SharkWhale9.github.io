@@ -2441,6 +2441,7 @@ body.no-scroll {
   outline: none;           /* remove focus outline */
   padding: 0;              /* no padding to keep square shape */
   transition: background-color 0.3s ease;
+  opacity: 0.45;
 }
 
 #back-to-top:hover,
