@@ -1255,6 +1255,7 @@ input[type="radio"] + label:before {
   height: auto;
   transition: transform 0.2s ease;
   display: block;
+  border-radius: 0.375em
 }
 
 .hobby-image:hover img {
