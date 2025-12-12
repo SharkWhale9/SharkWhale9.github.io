@@ -253,7 +253,15 @@
 										<li><a href="books.html">Books</a></li>
 										<li><a href="origami.html">Origami</a></li>
 										<li><a href="concert.html">Concert Photos</a></li>
-										<li><a href="travel.html">Travel Photos</a></li>
+										<li>
+											<span class="opener active">Travel Photos</span>
+											<ul>
+												<button onclick="document.getElementById('korea-section').scrollIntoView({behavior: 'smooth'})">Korea</button>
+												<button onclick="document.getElementById('japan-section').scrollIntoView({behavior: 'smooth'})">Japan</button>
+												<button onclick="document.getElementById('china-section').scrollIntoView({behavior: 'smooth'})">China</button>
+											</ul>
+
+										</li>
 									</ul>
 								</nav>
 
