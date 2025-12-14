@@ -229,6 +229,59 @@
 					window.scrollTo({ top: 0, behavior: 'smooth' });
 				});
 			</script>
+			<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+			<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+			<script>
+				let masonryInstances = [];
+
+				document.addEventListener("DOMContentLoaded", function () {
+
+				document.querySelectorAll('.masonry').forEach(function (grid) {
+
+					const msnry = new Masonry(grid, {
+					itemSelector: '.img-container',
+					percentPosition: true,
+					transitionDuration: '0.2s'
+					});
+
+					imagesLoaded(grid).on('progress', function () {
+					msnry.layout();
+					});
+
+					masonryInstances.push(msnry);
+				});
+
+				});
+			</script>
+			<script>
+				let resizeTimeout;
+
+				window.addEventListener('resize', function () {
+				clearTimeout(resizeTimeout);
+				resizeTimeout = setTimeout(() => {
+					masonryInstances.forEach(m => m.layout());
+				}, 150);
+				});
+			</script>
+			<script>
+				const sidebar = document.getElementById('sidebar');
+
+				if (sidebar) {
+				const observer = new MutationObserver(() => {
+
+					// Wait for sidebar transition to finish
+					setTimeout(() => {
+					masonryInstances.forEach(m => m.layout());
+					}, 300); // match sidebar transition duration
+
+				});
+
+				observer.observe(sidebar, {
+					attributes: true,
+					attributeFilter: ['class', 'style']
+				});
+				}
+			</script>
 
 	</body>
 </html>
