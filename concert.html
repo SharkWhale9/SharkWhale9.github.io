@@ -44,7 +44,7 @@
 										<h2>IVE - Show What I Have (24/02/24)</h2>
 									</header>
 									<div class="masonry">
-										<div class="img-container"><img src="concert photos/yujin.jpg" alt="yujin"></div>
+										<div class="img-container"><img src="concert photos/yujin.jpg" alt="yujin" loading="eager"></div>
 										<div class="img-container"><img src="concert photos/gaeul.jpg" alt="gaeul" loading="lazy"></div>
 										<div class="img-container"><img src="concert photos/rei.jpg" alt="rei" loading="lazy"></div>								
 										<div class="img-container"><img src="concert photos/wonyoung.jpg" alt="wonyoung" loading="lazy"></div>								
@@ -60,7 +60,7 @@
 										<h2>Aespa - Synk: Parallel Line (20/07/24)</h2>
 									</header>
 									<div class="masonry">
-										<div class="img-container"><img src="concert photos/karina.jpg" alt="karina"></div>      
+										<div class="img-container"><img src="concert photos/karina.jpg" alt="karina" loading="eager"></div>      
 										<div class="img-container"><img src="concert photos/winter.jpg" alt="winter" loading="lazy"></div>      
 										<div class="img-container"><img src="concert photos/giselle.jpg" alt="giselle" loading="lazy"></div>       
 										<div class="img-container"><img src="concert photos/ningning.jpg" alt="ningning" loading="lazy"></div>      
@@ -234,52 +234,56 @@
 			<script>
 				let masonryInstances = [];
 
-				document.addEventListener("DOMContentLoaded", function () {
+				// Initialize Masonry once
+				function initMasonry() {
+					document.querySelectorAll('.masonry').forEach(function (grid) {
+						// Check if Masonry instance already exists
+						let msnry = masonryInstances.find(m => m.element === grid);
 
-				document.querySelectorAll('.masonry').forEach(function (grid) {
+						if (!msnry) {
+							msnry = new Masonry(grid, {
+								itemSelector: '.img-container',
+								percentPosition: true,
+								transitionDuration: '0.2s'
+							});
+							masonryInstances.push({ instance: msnry, element: grid });
 
-					const msnry = new Masonry(grid, {
-					itemSelector: '.img-container',
-					percentPosition: true,
-					transitionDuration: '0.2s'
+							// Layout after each image loads
+							imagesLoaded(grid).on('progress', function () {
+								msnry.layout();
+							});
+						} else {
+							// If already exists, just layout
+							msnry.instance.layout();
+						}
 					});
+				}
 
-					imagesLoaded(grid).on('progress', function () {
-					msnry.layout();
-					});
+				document.addEventListener("DOMContentLoaded", initMasonry);
 
-					masonryInstances.push(msnry);
-				});
-
-				});
-			</script>
-			<script>
+				// ---- Debounced resize ----
 				let resizeTimeout;
-
 				window.addEventListener('resize', function () {
-				clearTimeout(resizeTimeout);
-				resizeTimeout = setTimeout(() => {
-					masonryInstances.forEach(m => m.layout());
-				}, 150);
+					clearTimeout(resizeTimeout);
+					resizeTimeout = setTimeout(() => {
+						masonryInstances.forEach(m => m.instance.layout());
+					}, 150);
 				});
-			</script>
-			<script>
+
+				// ---- Sidebar mutation observer ----
 				const sidebar = document.getElementById('sidebar');
-
 				if (sidebar) {
-				const observer = new MutationObserver(() => {
+					const observer = new MutationObserver(() => {
+						// Wait for transition to finish
+						setTimeout(() => {
+							masonryInstances.forEach(m => m.instance.layout());
+						}, 300);
+					});
 
-					// Wait for sidebar transition to finish
-					setTimeout(() => {
-					masonryInstances.forEach(m => m.layout());
-					}, 300); // match sidebar transition duration
-
-				});
-
-				observer.observe(sidebar, {
-					attributes: true,
-					attributeFilter: ['class', 'style']
-				});
+					observer.observe(sidebar, {
+						attributes: true,
+						attributeFilter: ['class', 'style']
+					});
 				}
 			</script>
 

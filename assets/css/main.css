@@ -2427,38 +2427,62 @@ body.lightbox-active #sidebar .toggle {
 }
 
 
-/* Overlay styling for origami items only */
-.origami-item {
-  position: relative;  /* needed for overlay */
-  overflow: hidden;    /* clip overlay */
-  border-radius: 0.375em;
-  margin-bottom: 8px;  /* adjust spacing */
+/* Masonry item */
+.img-container {
+  width: 33.333%;
+  padding: 8px;
 }
 
-/* Bottom-only overlay */
-.origami-item .overlay {
+/* Image boundary */
+.img-frame {
+  position: relative;
+  overflow: hidden;     /* 🔒 clips overlay */
+  border-radius: 0.375em;
+}
+
+/* Image */
+.img-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Overlay bar */
+.img-frame .img-overlay {
   position: absolute;
   left: 0;
+  right: 0;
   bottom: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.6);
+
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+
+  padding: 0.6rem 0;
+  font-size: 0.85rem;
   text-align: center;
-  padding: 0.5em;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
 
-.origami-item:hover .overlay {
-  opacity: 1;
-}
-
-/* Overlay button styling */
-.overlay-btn {
-  color: white;
   text-decoration: none;
-  font-weight: bold;
-  font-size: 0.95em;
+  box-sizing: border-box;
+
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
+
+/* Hover */
+.img-frame:hover .img-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.origami-page .img-frame img {
+  transform: none !important;
+}
+
+.origami-page .img-frame:hover img {
+  transform: none !important;
+}
+
 
 
 /* Responsive tweaks */

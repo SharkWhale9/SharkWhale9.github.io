@@ -44,9 +44,9 @@
 										<h2>Korea</h2>
 									</header>
 									<div class="masonry">
-										<div class="img-container"><img src="images/Gyeongju3.jpeg" alt=""></div>
-										<div class="img-container"><img src="images/Kshrine.jpeg" alt=""></div>
-										<div class="img-container"><img src="images/KBridge.jpeg" alt=""></div>
+										<div class="img-container"><img src="images/Gyeongju3.jpeg" alt="" loading="eager"></div>
+										<div class="img-container"><img src="images/Kshrine.jpeg" alt="" loading="eager"></div>
+										<div class="img-container"><img src="images/KBridge.jpeg" alt="" loading="eager"></div>
 										<div class="img-container"><img src="images/Dandelion.jpeg" alt=""></div>
 										<div class="img-container"><img src="images/Flower1.jpeg" alt=""></div>
 										<div class="img-container"><img src="images/Flower2.jpeg" alt=""></div>
@@ -125,9 +125,9 @@
 									</header>
 
 									<div class="masonry">
-										<div class="img-container"><img src="images/Fukuoka.jpeg" alt=""></div>
-										<div class="img-container"><img src="images/Shrine.jpeg" alt=""></div>
-										<div class="img-container"><img src="images/Tori2.jpeg" alt=""></div>
+										<div class="img-container"><img src="images/Fukuoka.jpeg" alt="" loading="eager"></div>
+										<div class="img-container"><img src="images/Shrine.jpeg" alt="" loading="eager"></div>
+										<div class="img-container"><img src="images/Tori2.jpeg" alt="" loading="eager"></div>
 										<div class="img-container"><img src="images/Fox.jpeg" alt=""></div>
 										<div class="img-container"><img src="images/Daizaifu.jpeg" alt=""></div>
 										<div class="img-container"><img src="images/Kirin.jpeg" alt=""></div>
@@ -167,9 +167,9 @@
 									</header>
 
 									<div class="masonry">
-										 <div class="img-container"><img src="images/ShanghaiTower.jpeg" alt=""></div>
-										 <div class="img-container"><img src="images/DisneyClock.jpeg" alt=""></div>
-										 <div class="img-container"><img src="images/Pearl.jpeg" alt=""></div>
+										 <div class="img-container"><img src="images/ShanghaiTower.jpeg" alt="" loading="eager"></div>
+										 <div class="img-container"><img src="images/DisneyClock.jpeg" alt="" loading="eager"></div>
+										 <div class="img-container"><img src="images/Pearl.jpeg" alt="" loading="eager"></div>
 										 <div class="img-container"><img src="images/Shanghai.jpeg" alt=""></div>
 										 <div class="img-container"><img src="images/Bund1.jpeg" alt=""></div>
 										 <div class="img-container"><img src="images/Yuyuan1.jpeg" alt=""></div>
@@ -381,54 +381,59 @@
 			<script>
 				let masonryInstances = [];
 
-				document.addEventListener("DOMContentLoaded", function () {
+				// Initialize Masonry once
+				function initMasonry() {
+					document.querySelectorAll('.masonry').forEach(function (grid) {
+						// Check if Masonry instance already exists
+						let msnry = masonryInstances.find(m => m.element === grid);
 
-				document.querySelectorAll('.masonry').forEach(function (grid) {
+						if (!msnry) {
+							msnry = new Masonry(grid, {
+								itemSelector: '.img-container',
+								percentPosition: true,
+								transitionDuration: '0.2s'
+							});
+							masonryInstances.push({ instance: msnry, element: grid });
 
-					const msnry = new Masonry(grid, {
-					itemSelector: '.img-container',
-					percentPosition: true,
-					transitionDuration: '0.2s'
+							// Layout after each image loads
+							imagesLoaded(grid).on('progress', function () {
+								msnry.layout();
+							});
+						} else {
+							// If already exists, just layout
+							msnry.instance.layout();
+						}
 					});
+				}
 
-					imagesLoaded(grid).on('progress', function () {
-					msnry.layout();
-					});
+				document.addEventListener("DOMContentLoaded", initMasonry);
 
-					masonryInstances.push(msnry);
-				});
-
-				});
-			</script>
-			<script>
+				// ---- Debounced resize ----
 				let resizeTimeout;
-
 				window.addEventListener('resize', function () {
-				clearTimeout(resizeTimeout);
-				resizeTimeout = setTimeout(() => {
-					masonryInstances.forEach(m => m.layout());
-				}, 150);
+					clearTimeout(resizeTimeout);
+					resizeTimeout = setTimeout(() => {
+						masonryInstances.forEach(m => m.instance.layout());
+					}, 150);
 				});
-			</script>
-			<script>
+
+				// ---- Sidebar mutation observer ----
 				const sidebar = document.getElementById('sidebar');
-
 				if (sidebar) {
-				const observer = new MutationObserver(() => {
+					const observer = new MutationObserver(() => {
+						// Wait for transition to finish
+						setTimeout(() => {
+							masonryInstances.forEach(m => m.instance.layout());
+						}, 300);
+					});
 
-					// Wait for sidebar transition to finish
-					setTimeout(() => {
-					masonryInstances.forEach(m => m.layout());
-					}, 300); // match sidebar transition duration
-
-				});
-
-				observer.observe(sidebar, {
-					attributes: true,
-					attributeFilter: ['class', 'style']
-				});
+					observer.observe(sidebar, {
+						attributes: true,
+						attributeFilter: ['class', 'style']
+					});
 				}
 			</script>
+
 
 	</body>
 </html>
