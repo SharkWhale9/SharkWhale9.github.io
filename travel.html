@@ -399,6 +399,11 @@
 							imagesLoaded(grid).on('progress', function () {
 								msnry.layout();
 							});
+							
+							// Final Layout when everything is 100% finished
+							imagesLoaded(grid).on('always', function () {
+							msnry.layout();
+							});
 						} else {
 							// If already exists, just layout
 							msnry.instance.layout();
@@ -424,7 +429,7 @@
 						// Wait for transition to finish
 						setTimeout(() => {
 							masonryInstances.forEach(m => m.instance.layout());
-						}, 300);
+						}, 550);
 					});
 
 					observer.observe(sidebar, {
