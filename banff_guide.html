@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BANFF System — Complete Functional Guide</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #fafaf8;
+    --bg2: #f1efea;
+    --bg3: #e8e6df;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #4a4a46;
+    --text3: #7a7a74;
+    --accent: #2c4a8a;
+    --accent2: #3b6bc4;
+    --accent-light: #e8eef8;
+    --teal: #0f6e56;
+    --teal-light: #e1f5ee;
+    --amber: #854f0b;
+    --amber-light: #faeeda;
+    --coral: #993c1d;
+    --coral-light: #faece7;
+    --purple: #534ab7;
+    --purple-light: #eeedfe;
+    --green: #3b6d11;
+    --green-light: #eaf3de;
+    --red: #a32d2d;
+    --red-light: #fcebeb;
+    --radius: 8px;
+    --radius-lg: 14px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.07);
+    --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.65; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0; padding: 0 28px; overflow-x: auto; }
+  nav a { display: inline-block; padding: 14px 14px; font-size: 13px; font-weight: 500; color: var(--text3); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+  nav .brand { font-size: 14px; font-weight: 700; color: var(--accent); margin-right: 16px; letter-spacing: -.3px; border-bottom: none; padding-left: 0; flex-shrink: 0; }
+
+  /* LAYOUT */
+  .page { max-width: 960px; margin: 0 auto; padding: 48px 28px 80px; }
+  section { margin-bottom: 72px; scroll-margin-top: 60px; }
+  h1 { font-size: 30px; font-weight: 700; letter-spacing: -.5px; color: var(--text); margin-bottom: 10px; }
+  h2 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 14px; letter-spacing: -.3px; }
+  h3 { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+  h4 { font-size: 14px; font-weight: 600; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .4px; }
+  p { color: var(--text2); margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+  .lead { font-size: 16px; color: var(--text2); line-height: 1.7; }
+  strong { color: var(--text); }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #1a2e5a 0%, #2c4a8a 60%, #3b6bc4 100%); border-radius: var(--radius-lg); padding: 48px 40px; margin-bottom: 56px; color: white; }
+  .hero h1 { color: white; font-size: 34px; margin-bottom: 10px; }
+  .hero p { color: rgba(255,255,255,.78); font-size: 16px; margin-bottom: 0; }
+  .hero-meta { display: flex; gap: 24px; margin-top: 20px; }
+  .hero-badge { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); border-radius: 20px; padding: 4px 14px; font-size: 12px; color: rgba(255,255,255,.9); }
+
+  /* CARDS */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 24px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 20px 0; }
+  .proc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; transition: border-color .15s, box-shadow .15s; cursor: pointer; }
+  .proc-card:hover { border-color: var(--accent2); box-shadow: 0 2px 10px rgba(44,74,138,.1); }
+  .proc-card .proc-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+  .proc-card h3 { font-size: 14px; margin-bottom: 5px; }
+  .proc-card p { font-size: 13px; }
+
+  /* COLOR HELPERS */
+  .c-blue { background: var(--accent-light); border-color: rgba(44,74,138,.2); }
+  .c-blue .proc-num { background: var(--accent); color: white; }
+  .c-teal { background: var(--teal-light); border-color: rgba(15,110,86,.2); }
+  .c-teal .proc-num { background: var(--teal); color: white; }
+  .c-amber { background: var(--amber-light); border-color: rgba(133,79,11,.2); }
+  .c-amber .proc-num { background: var(--amber); color: white; }
+  .c-coral { background: var(--coral-light); border-color: rgba(153,60,29,.2); }
+  .c-coral .proc-num { background: var(--coral); color: white; }
+  .c-purple { background: var(--purple-light); border-color: rgba(83,74,183,.2); }
+  .c-purple .proc-num { background: var(--purple); color: white; }
+  .c-green { background: var(--green-light); border-color: rgba(59,109,17,.2); }
+  .c-green .proc-num { background: var(--green); color: white; }
+  .c-red { background: var(--red-light); border-color: rgba(163,45,45,.2); }
+  .c-red .proc-num { background: var(--red); color: white; }
+
+  /* TAGS */
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 2px; }
+  .tag-blue { background: var(--accent-light); color: var(--accent); }
+  .tag-teal { background: var(--teal-light); color: var(--teal); }
+  .tag-amber { background: var(--amber-light); color: var(--amber); }
+  .tag-coral { background: var(--coral-light); color: var(--coral); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-red { background: var(--red-light); color: var(--red); }
+  .tag-gray { background: var(--bg2); color: var(--text2); }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; }
+  th { background: var(--bg2); color: var(--text); font-weight: 600; padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--border2); font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+  .table-wrap { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin: 16px 0; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12px; background: var(--bg2); padding: 1px 6px; border-radius: 4px; color: var(--coral); }
+
+  /* FORMULA BOX */
+  .formula { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent2); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 20px; margin: 16px 0; font-family: var(--mono); font-size: 14px; color: var(--text); line-height: 1.8; overflow-x: auto; }
+
+  /* CALLOUT */
+  .callout { border-radius: var(--radius); padding: 14px 18px; margin: 16px 0; border: 1px solid; }
+  .callout-info { background: var(--accent-light); border-color: rgba(44,74,138,.2); }
+  .callout-info strong { color: var(--accent); }
+  .callout-tip { background: var(--teal-light); border-color: rgba(15,110,86,.2); }
+  .callout-tip strong { color: var(--teal); }
+  .callout-warn { background: var(--amber-light); border-color: rgba(133,79,11,.2); }
+  .callout-warn strong { color: var(--amber); }
+
+  /* STEPS */
+  .steps { list-style: none; margin: 16px 0; }
+  .steps li { display: flex; gap: 14px; margin-bottom: 12px; align-items: flex-start; }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-body { color: var(--text2); font-size: 14px; line-height: 1.6; }
+  .step-body strong { color: var(--text); }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+  /* SECTION HEADER */
+  .section-tag { display: inline-block; background: var(--accent); color: white; padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 14px; }
+  .section-tag.teal { background: var(--teal); }
+  .section-tag.amber { background: var(--amber); }
+  .section-tag.purple { background: var(--purple); }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 16px 0; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ALGORITHM GRID */
+  .algo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 16px 0; }
+  .algo-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .algo-card .algo-name { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .algo-card .algo-eq { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-bottom: 6px; background: var(--bg2); padding: 4px 8px; border-radius: 4px; }
+  .algo-card .algo-desc { font-size: 12px; color: var(--text2); }
+
+  /* INTERACTIVE DISTANCE DEMO */
+  .demo-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 24px; margin: 20px 0; }
+  .demo-box h3 { margin-bottom: 16px; }
+  input[type=range] { width: 100%; accent-color: var(--accent2); }
+  .slider-row { display: grid; grid-template-columns: 120px 1fr 60px; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .slider-label { font-size: 13px; color: var(--text2); font-weight: 500; }
+  .slider-val { font-size: 13px; font-weight: 600; color: var(--accent2); text-align: right; font-family: var(--mono); }
+  .dist-result { margin-top: 16px; padding: 14px 18px; border-radius: var(--radius); background: var(--accent-light); border: 1px solid rgba(44,74,138,.15); }
+  .dist-num { font-size: 26px; font-weight: 700; color: var(--accent); font-family: var(--mono); }
+
+  /* RECORD CLASSIFY TABLE */
+  .record-row { display: grid; grid-template-columns: 80px 110px repeat(5, 1fr); gap: 0; margin: 2px 0; border-radius: var(--radius); overflow: hidden; }
+  .record-row > div { padding: 7px 10px; font-size: 12px; font-family: var(--mono); }
+  .rtype { font-weight: 700; font-size: 11px; }
+
+  /* FLOW DIAGRAM (SVG-driven via inline) */
+  .workflow-svg-wrap { overflow-x: auto; margin: 20px 0; }
+
+  /* TOOLTIPS */
+  .tooltip-anchor { position: relative; display: inline; }
+  .tooltip-anchor .tt { display: none; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: var(--text); color: white; border-radius: var(--radius); padding: 6px 10px; font-size: 12px; white-space: nowrap; z-index: 10; pointer-events: none; }
+  .tooltip-anchor:hover .tt { display: block; }
+
+  /* ACCORDION */
+  details { border: 1px solid var(--border); border-radius: var(--radius); margin: 8px 0; overflow: hidden; }
+  details summary { padding: 12px 16px; font-weight: 500; font-size: 14px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; background: var(--bg); color: var(--text2); }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: '+'; font-size: 18px; color: var(--text3); font-weight: 300; }
+  details[open] summary::after { content: '−'; }
+  details[open] summary { background: var(--bg2); color: var(--text); }
+  details .det-body { padding: 16px; background: var(--surface); border-top: 1px solid var(--border); }
+
+  /* KD TREE VISUALIZER */
+  #kd-canvas { width: 100%; height: 300px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); cursor: crosshair; display: block; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="#">BANFF Guide</a>
+  <a href="#overview" class="active">Overview</a>
+  <a href="#workflow">Workflow</a>
+  <a href="#procedures">Procedures</a>
+  <a href="#donor">Donor Imputation</a>
+  <a href="#estimators">Estimators</a>
+  <a href="#comparison">Comparison</a>
+</nav>
+
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <h1>BANFF Generalized Edit &amp; Imputation System</h1>
+  <p>A complete functional guide to Statistics Canada's BANFF system — from data ingestion through edit checking, outlier detection, error localization, and all imputation methods.</p>
+  <div class="hero-meta">
+    <span class="hero-badge">Version 2.07</span>
+    <span class="hero-badge">Statistics Canada</span>
+    <span class="hero-badge">8 SAS Procedures</span>
+    <span class="hero-badge">March 2017</span>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="section-tag">Overview</div>
+  <h2>What is BANFF?</h2>
+  <p class="lead">BANFF (the successor to GEIS) is a generalized system of SAS procedures for the <strong>edit and imputation</strong> of survey data. It is used primarily at Statistics Canada for handling missing, erroneous, or extreme values in business and household surveys.</p>
+
+  <div class="two-col">
+    <div class="card">
+      <h4>Core Design Philosophy</h4>
+      <p>Each BANFF procedure is <strong>independent</strong> — they can be run in any order or subset. There is no enforced pipeline; the analyst configures the sequence. Data flows through SAS datasets between procedures.</p>
+      <p>Procedures are stratified by <strong>BY variables</strong>, which partition records into groups for independent processing (e.g., by industry, region, or size class).</p>
+    </div>
+    <div class="card">
+      <h4>Key Concepts</h4>
+      <p><strong>Edits</strong> — linear inequality/equality constraints records must satisfy. BANFF operates in <em>canonical form</em>: all terms on left, constants on right.</p>
+      <p><strong>Edit groups</strong> — sets of variables processed together by a single edit rule set. Records are classified as pass/fail per group.</p>
+      <p><strong>Field status codes</strong> — every field carries a status: original (ok), field to impute (FTI), field to exclude (FTE), or imputed (I*).</p>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>Missing data in surveys:</strong> Non-response, editing failures, and outlier exclusion all create fields requiring imputation. BANFF provides a structured toolchain to systematically identify <em>which</em> fields need imputing and <em>how</em> to impute them.
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section id="workflow">
+  <div class="section-tag">Workflow</div>
+  <h2>System Workflow</h2>
+  <p>The typical BANFF pipeline moves data through up to eight procedures. Below is the standard recommended sequence — though analysts choose which steps to include.</p>
+
+  <div class="workflow-svg-wrap">
+    <svg width="100%" viewBox="0 0 900 620" role="img">
+      <title>BANFF system workflow diagram</title>
+      <desc>Eight procedures shown in sequence from data input through imputation output</desc>
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- DATA INPUT -->
+      <rect x="340" y="10" width="220" height="46" rx="10" fill="#1a2e5a" />
+      <text x="450" y="28" text-anchor="middle" fill="white" font-size="13" font-weight="700" dominant-baseline="middle">Survey Data Input</text>
+      <text x="450" y="44" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="11" dominant-baseline="middle">SAS datasets with raw responses</text>
+
+      <!-- ARROW DOWN -->
+      <line x1="450" y1="56" x2="450" y2="88" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- 1. VERIFYEDITS -->
+      <rect x="300" y="90" width="300" height="52" rx="10" fill="#e8eef8" stroke="rgba(44,74,138,.3)" stroke-width="1"/>
+      <text x="370" y="108" text-anchor="middle" fill="#1a2e5a" font-size="10" font-weight="700" dominant-baseline="middle">PROC 1</text>
+      <text x="450" y="108" text-anchor="middle" fill="#1a2e5a" font-size="13" font-weight="700" dominant-baseline="middle">VerifyEdits</text>
+      <text x="450" y="126" text-anchor="middle" fill="#4a6098" font-size="11" dominant-baseline="middle">Edit specification &amp; consistency analysis</text>
+
+      <line x1="450" y1="142" x2="450" y2="164" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- 2. EDITSTATS -->
+      <rect x="300" y="166" width="300" height="52" rx="10" fill="#e8eef8" stroke="rgba(44,74,138,.3)" stroke-width="1"/>
+      <text x="370" y="184" text-anchor="middle" fill="#1a2e5a" font-size="10" font-weight="700" dominant-baseline="middle">PROC 2</text>
+      <text x="450" y="184" text-anchor="middle" fill="#1a2e5a" font-size="13" font-weight="700" dominant-baseline="middle">EditStats</text>
+      <text x="450" y="202" text-anchor="middle" fill="#4a6098" font-size="11" dominant-baseline="middle">Edit summary statistics tables</text>
+
+      <line x1="450" y1="218" x2="450" y2="240" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- 3. OUTLIER -->
+      <rect x="280" y="242" width="340" height="52" rx="10" fill="#faeeda" stroke="rgba(133,79,11,.25)" stroke-width="1"/>
+      <text x="350" y="260" text-anchor="middle" fill="#854f0b" font-size="10" font-weight="700" dominant-baseline="middle">PROC 3</text>
+      <text x="450" y="260" text-anchor="middle" fill="#633806" font-size="13" font-weight="700" dominant-baseline="middle">Outlier Detection</text>
+      <text x="450" y="278" text-anchor="middle" fill="#854f0b" font-size="11" dominant-baseline="middle">Hidiroglou-Berthelot &amp; Sigma-Gap methods</text>
+
+      <line x1="450" y1="294" x2="450" y2="316" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- 4. ERRORLOC -->
+      <rect x="280" y="318" width="340" height="52" rx="10" fill="#faece7" stroke="rgba(153,60,29,.25)" stroke-width="1"/>
+      <text x="350" y="336" text-anchor="middle" fill="#993c1d" font-size="10" font-weight="700" dominant-baseline="middle">PROC 4</text>
+      <text x="450" y="336" text-anchor="middle" fill="#712b13" font-size="13" font-weight="700" dominant-baseline="middle">ErrorLoc</text>
+      <text x="450" y="354" text-anchor="middle" fill="#993c1d" font-size="11" dominant-baseline="middle">Identify minimum fields to change (Fellegi-Holt)</text>
+
+      <!-- IMPUTATION BLOCK HEADER -->
+      <rect x="50" y="400" width="800" height="186" rx="14" fill="none" stroke="rgba(83,74,183,.3)" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text x="450" y="390" text-anchor="middle" fill="#534ab7" font-size="12" font-weight="700">IMPUTATION METHODS (choose one or more)</text>
+
+      <!-- Arrows into imputation zone -->
+      <line x1="290" y1="370" x2="200" y2="420" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="380" y1="370" x2="370" y2="420" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="520" y1="370" x2="530" y2="420" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="610" y1="370" x2="700" y2="420" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- 5. DETERMINISTIC -->
+      <rect x="68" y="422" width="160" height="56" rx="9" fill="#eeedfe" stroke="rgba(83,74,183,.3)" stroke-width="1"/>
+      <text x="148" y="440" text-anchor="middle" fill="#534ab7" font-size="10" font-weight="700" dominant-baseline="middle">PROC 5</text>
+      <text x="148" y="457" text-anchor="middle" fill="#3c3489" font-size="12" font-weight="700" dominant-baseline="middle">Deterministic</text>
+      <text x="148" y="470" text-anchor="middle" fill="#534ab7" font-size="10" dominant-baseline="middle">Single-solution edits</text>
+
+      <!-- 6. DONORIMPUTATION -->
+      <rect x="248" y="422" width="160" height="56" rx="9" fill="#eeedfe" stroke="rgba(83,74,183,.35)" stroke-width="1.5"/>
+      <text x="328" y="440" text-anchor="middle" fill="#534ab7" font-size="10" font-weight="700" dominant-baseline="middle">PROC 6 ★</text>
+      <text x="328" y="457" text-anchor="middle" fill="#3c3489" font-size="12" font-weight="700" dominant-baseline="middle">DonorImputation</text>
+      <text x="328" y="470" text-anchor="middle" fill="#534ab7" font-size="10" dominant-baseline="middle">Nearest neighbour donor</text>
+
+      <!-- 7. ESTIMATOR -->
+      <rect x="428" y="422" width="160" height="56" rx="9" fill="#eeedfe" stroke="rgba(83,74,183,.35)" stroke-width="1.5"/>
+      <text x="508" y="440" text-anchor="middle" fill="#534ab7" font-size="10" font-weight="700" dominant-baseline="middle">PROC 7 ★</text>
+      <text x="508" y="457" text-anchor="middle" fill="#3c3489" font-size="12" font-weight="700" dominant-baseline="middle">Estimator</text>
+      <text x="508" y="470" text-anchor="middle" fill="#534ab7" font-size="10" dominant-baseline="middle">Statistical estimators</text>
+
+      <!-- 8. PRORATE -->
+      <rect x="608" y="422" width="120" height="56" rx="9" fill="#eeedfe" stroke="rgba(83,74,183,.3)" stroke-width="1"/>
+      <text x="668" y="440" text-anchor="middle" fill="#534ab7" font-size="10" font-weight="700" dominant-baseline="middle">PROC 8</text>
+      <text x="668" y="457" text-anchor="middle" fill="#3c3489" font-size="12" font-weight="700" dominant-baseline="middle">Prorate</text>
+      <text x="668" y="470" text-anchor="middle" fill="#534ab7" font-size="10" dominant-baseline="middle">Ratio adjustment</text>
+
+      <!-- Arrows from imputation to output -->
+      <line x1="148" y1="478" x2="148" y2="530" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="328" y1="478" x2="328" y2="530" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="508" y1="478" x2="508" y2="530" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="668" y1="478" x2="668" y2="530" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="148" y1="545" x2="395" y2="574" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="328" y1="545" x2="420" y2="574" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="508" y1="545" x2="480" y2="574" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="668" y1="545" x2="505" y2="574" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- OUTPUT -->
+      <rect x="330" y="576" width="240" height="40" rx="10" fill="#1a2e5a"/>
+      <text x="450" y="596" text-anchor="middle" fill="white" font-size="13" font-weight="700" dominant-baseline="middle">Clean, Imputed Data Output</text>
+
+      <!-- MASS IMPUTATION side note -->
+      <rect x="760" y="422" width="120" height="56" rx="9" fill="#e1f5ee" stroke="rgba(15,110,86,.3)" stroke-width="1"/>
+      <text x="820" y="440" text-anchor="middle" fill="#0f6e56" font-size="10" font-weight="700" dominant-baseline="middle">PROC ALT</text>
+      <text x="820" y="457" text-anchor="middle" fill="#085041" font-size="12" font-weight="700" dominant-baseline="middle">Mass Imp.</text>
+      <text x="820" y="470" text-anchor="middle" fill="#0f6e56" font-size="10" dominant-baseline="middle">Sub-sample fill</text>
+    </svg>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>★ Focus of this guide:</strong> Sections on DonorImputation and Estimator below contain full theoretical explanations, algorithm details, and interactive examples.
+  </div>
+</section>
+
+<!-- PROCEDURES -->
+<section id="procedures">
+  <div class="section-tag">All Procedures</div>
+  <h2>The Eight BANFF Procedures</h2>
+
+  <div class="card-grid">
+    <div class="proc-card c-blue">
+      <div class="proc-num">1</div>
+      <h3>VerifyEdits</h3>
+      <p>Checks edit rules for internal consistency. Identifies redundant, contradictory, hidden-equality edits. Generates extremal points and implied edits.</p>
+      <div style="margin-top:8px"><span class="tag tag-blue">Validation</span></div>
+    </div>
+    <div class="proc-card c-blue">
+      <div class="proc-num">2</div>
+      <h3>EditStats</h3>
+      <p>Produces summary statistics tables showing how many records fail each edit, which field combinations most frequently fail, and failure patterns.</p>
+      <div style="margin-top:8px"><span class="tag tag-blue">Diagnostics</span></div>
+    </div>
+    <div class="proc-card c-amber">
+      <div class="proc-num">3</div>
+      <h3>Outlier Detection</h3>
+      <p>Identifies extreme values using the Hidiroglou-Berthelot method (current or historical ratios) or the Sigma-Gap method. Marks fields as FTE (not to be donated).</p>
+      <div style="margin-top:8px"><span class="tag tag-amber">Outliers</span></div>
+    </div>
+    <div class="proc-card c-coral">
+      <div class="proc-num">4</div>
+      <h3>ErrorLoc</h3>
+      <p>Implements the Fellegi-Holt principle: find the <em>minimum number of fields</em> to flag for imputation so the record can pass all edits. NP-hard in general; uses branch-and-bound.</p>
+      <div style="margin-top:8px"><span class="tag tag-coral">Error Location</span></div>
+    </div>
+    <div class="proc-card c-purple">
+      <div class="proc-num">5</div>
+      <h3>Deterministic</h3>
+      <p>Imputes when exactly one value satisfies the edit constraints for a flagged field. Uses constraint propagation. No search — pure deduction from the edit system.</p>
+      <div style="margin-top:8px"><span class="tag tag-purple">Imputation</span></div>
+    </div>
+    <div class="proc-card c-purple">
+      <div class="proc-num">6</div>
+      <h3>DonorImputation ★</h3>
+      <p>Nearest-neighbour hot-deck imputation. Finds the most similar passing record (donor) and transfers its values to the failing record (recipient). Preserves inter-variable relationships.</p>
+      <div style="margin-top:8px"><span class="tag tag-purple">Imputation</span><span class="tag tag-gray">Deep Dive ↓</span></div>
+    </div>
+    <div class="proc-card c-purple">
+      <div class="proc-num">7</div>
+      <h3>Estimator ★</h3>
+      <p>Imputes individual variables using 20 pre-defined algorithms (ratio estimators, trend adjustments, regression models) or user-defined formulas. Current and historical data supported.</p>
+      <div style="margin-top:8px"><span class="tag tag-purple">Imputation</span><span class="tag tag-gray">Deep Dive ↓</span></div>
+    </div>
+    <div class="proc-card c-teal">
+      <div class="proc-num">8</div>
+      <h3>Prorate</h3>
+      <p>Adjusts component values so they sum to a given total via prorating algorithms. Used as a post-imputation cleanup to enforce additive consistency.</p>
+      <div style="margin-top:8px"><span class="tag tag-teal">Adjustment</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Edit Specification — Canonical Form</h3>
+    <p>All edits in BANFF must be expressed as linear inequalities with variables on the left and a constant on the right. The system automatically converts equalities and "≥" forms.</p>
+    <div class="formula">a₁x₁ + a₂x₂ + … + aₙxₙ  ≤  b  (canonical inequality form)<br><br>Example: Revenue − Expenses ≤ 0  (i.e., Expenses ≥ Revenue)<br>Example: Employees > 0  →  −Employees ≤ −1</div>
+    <p>BANFF also supports <strong>edit groups</strong> (variable subsets treated together) and <strong>data groups</strong> (record subsets processed independently via BY variables).</p>
+  </div>
+</section>
+
+<!-- DONOR IMPUTATION -->
+<section id="donor">
+  <div class="section-tag teal">Donor Imputation — Deep Dive</div>
+  <h2>Proc DonorImputation — Theory &amp; Method</h2>
+
+  <p class="lead">Donor imputation is a <strong>hot-deck</strong> method that replaces missing values in a recipient record by transferring values directly from the most similar valid record (the donor). Because all imputed fields come from one record, the multivariate relationships among variables are automatically preserved — a key advantage over univariate methods.</p>
+
+  <!-- RECORD TYPES -->
+  <h3>Step 1 — Record Classification</h3>
+  <p>Before any search begins, every record in the dataset is classified into one of four types relative to each edit group:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Inside Edit Group</th><th>Outside Edit Group (match fields)</th><th>Role</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-teal">Donor</span></td>
+          <td>All fields pass edits, no FTI flags</td>
+          <td>No FTI flags in user-specified match fields</td>
+          <td>Source of imputed values</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-coral">Recipient</span></td>
+          <td>At least one field flagged FTI</td>
+          <td>Any state</td>
+          <td>Receives imputed values</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-amber">Mixed</span></td>
+          <td>All fields pass edits (no FTI)</td>
+          <td>At least one FTI in user-specified match fields</td>
+          <td>Cannot donate (ineligible match fields)</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gray">FTE</span></td>
+          <td>Any field marked "field to exclude"</td>
+          <td>—</td>
+          <td>Outlier-flagged: accepted but cannot be donated</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>FTE (Field to Exclude):</strong> These are values flagged by Outlier Detection as extreme enough to be suspicious, but not so extreme as to require changing. The data is kept as-is, but flagged so it is never copied to other records.
+  </div>
+
+  <!-- MATCHING FIELDS -->
+  <h3>Step 2 — Finding Matching Fields</h3>
+  <p>For each recipient, BANFF identifies which of its <em>acceptable</em> fields are informative for predicting the fields to be imputed. This is done via constraint analysis — not heuristically:</p>
+
+  <ul class="steps">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-body"><strong>Substitute</strong> the recipient's known acceptable values into the edit system, reducing it to a system involving only the fields to be imputed.</div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-body"><strong>Identify boundary edits</strong> — the subset of reduced edits that actually limit (bound) the feasible region of unknown fields.</div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-body"><strong>Trace back</strong> to the original edits. The acceptable fields appearing in those boundary edits are the <em>system-selected matching fields</em> for this recipient.</div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-body"><strong>Append user-specified matching fields</strong> (declared outside the edit group) if they have valid values for this recipient.</div>
+    </li>
+  </ul>
+
+  <div class="callout callout-warn">
+    <strong>Why this matters:</strong> Two records with the same fields to impute may have different matching fields depending on their acceptable values — because different subsets of the edit constraints will be active (binding) for different records.
+  </div>
+
+  <!-- RANK TRANSFORMATION -->
+  <h3>Step 3 — Rank Transformation</h3>
+  <p>Raw values of matching fields cannot be used directly in distance calculations because different fields have vastly different scales (e.g., revenue in millions vs. employee count in hundreds). BANFF normalises using <strong>rank-value transformation</strong>:</p>
+
+  <div class="formula">Transformed value  =  rank(x) / (N_valid + 1)
+
+where rank(x) is the rank of x among all valid values of that field,
+and N_valid is the total number of records with a valid value for that field.
+Tied values receive the average of their ranks.</div>
+
+  <div class="two-col">
+    <div class="card">
+      <h4>Properties of the Transformation</h4>
+      <p>Values are mapped to the interval <code>(0, 1)</code>, approximately uniformly distributed (except for ties). <strong>Extreme values are compressed</strong> — the difference between rank 1 and rank 2 is identical to the difference between rank 8 and rank 9, regardless of how far apart the raw values are.</p>
+    </div>
+    <div class="card">
+      <h4>Consequence for Distance</h4>
+      <p>Because all matching fields are now on a common <code>(0,1)</code> scale with equal weight, <strong>no single matching field can dominate the distance calculation</strong>. The transformation prevents a field with a wide raw range (e.g., revenue) from swamping fields with narrow ranges (e.g., flag variables).</p>
+    </div>
+  </div>
+
+  <!-- DISTANCE -->
+  <h3>Step 4 — L∞ Distance (Minimax)</h3>
+  <p>BANFF uses the <strong>L∞ norm</strong> (Chebyshev distance / minimax distance) to measure how similar a recipient is to each donor candidate:</p>
+
+  <div class="formula">d(recipient, donor)  =  max{ |x₁−y₁|, |x₂−y₂|, …, |xₙ−yₙ| }
+
+where xᵢ and yᵢ are the transformed values of the i-th matching field
+for the recipient and donor respectively.</div>
+
+  <p>This means: the distance equals the <em>largest single-field discrepancy</em>. A donor that is 0.3 off on one field and 0 on all others is considered <strong>farther</strong> than a donor that is 0.1 off on all three fields — the worst-case mismatch determines closeness.</p>
+
+  <!-- INTERACTIVE DISTANCE DEMO -->
+  <div class="demo-box">
+    <h3>Interactive: L∞ Distance Calculator</h3>
+    <p style="font-size:13px;color:var(--text3);margin-bottom:16px">Set the transformed values for a recipient and donor across three matching fields. The L∞ distance updates in real time.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div>
+        <h4>Recipient values</h4>
+        <div class="slider-row"><span class="slider-label">Field x₁</span><input type="range" min="0" max="100" value="50" id="r1" oninput="calcDist()"><span class="slider-val" id="r1v">0.50</span></div>
+        <div class="slider-row"><span class="slider-label">Field x₂</span><input type="range" min="0" max="100" value="50" id="r2" oninput="calcDist()"><span class="slider-val" id="r2v">0.50</span></div>
+        <div class="slider-row"><span class="slider-label">Field x₃</span><input type="range" min="0" max="100" value="50" id="r3" oninput="calcDist()"><span class="slider-val" id="r3v">0.50</span></div>
+      </div>
+      <div>
+        <h4>Donor candidate values</h4>
+        <div class="slider-row"><span class="slider-label">Field y₁</span><input type="range" min="0" max="100" value="60" id="d1" oninput="calcDist()"><span class="slider-val" id="d1v">0.60</span></div>
+        <div class="slider-row"><span class="slider-label">Field y₂</span><input type="range" min="0" max="100" value="55" id="d2" oninput="calcDist()"><span class="slider-val" id="d2v">0.55</span></div>
+        <div class="slider-row"><span class="slider-label">Field y₃</span><input type="range" min="0" max="100" value="45" id="d3" oninput="calcDist()"><span class="slider-val" id="d3v">0.45</span></div>
+      </div>
+    </div>
+    <div class="dist-result" id="dist-result">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:4px">L∞ Distance (minimax)</div>
+      <div class="dist-num" id="dist-out">0.10</div>
+      <div id="dist-breakdown" style="font-size:12px;color:var(--text2);margin-top:6px;font-family:var(--mono)">max(|0.50−0.60|, |0.50−0.55|, |0.50−0.45|) = max(0.10, 0.05, 0.05) = 0.10</div>
+    </div>
+  </div>
+
+  <!-- KD TREE -->
+  <h3>Step 5 — k-d Tree for Efficient Search</h3>
+  <p>Finding the nearest donor by brute-force comparison against every record would be O(N). BANFF builds a <strong>k-dimensional tree (k-d tree)</strong> over the donor population to make the search sub-linear:</p>
+
+  <details>
+    <summary>How the k-d Tree is Constructed</summary>
+    <div class="det-body">
+      <ul class="steps">
+        <li><div class="step-num">1</div><div class="step-body"><strong>Root node:</strong> All donors are placed at the root. The matching field with the largest range of transformed values is selected as the <em>branching field</em>.</div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>Splitting:</strong> Donors are split into two halves at the median branching-field value. Equal-sized groups are created; ties are kept together.</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>Recursion:</strong> Each half becomes a child node. The process repeats: choose the largest-range field, split at median, recurse.</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>Terminal nodes (buckets):</strong> Recursion stops when a node holds ≤ 16 donors. These are leaf nodes — the actual donor data lives here.</div></li>
+      </ul>
+      <p>The tree partitions the k-dimensional matching-field space into non-overlapping regions. Donors in the same region are similar to each other.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>How the Tree is Traversed to Find the Nearest Donor</summary>
+    <div class="det-body">
+      <ul class="steps">
+        <li><div class="step-num">1</div><div class="step-body">Navigate the tree from root to leaf by comparing the recipient's matching fields against each branching value. This identifies the bucket likely to contain the nearest donor.</div></li>
+        <li><div class="step-num">2</div><div class="step-body">Record the <em>n</em> closest donors found so far (user-configurable parameter). Compute the radius = distance to the farthest donor in this set.</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>Bounds-overlap-ball test:</strong> For each unvisited node, check whether a ball of the current radius centered on the recipient overlaps the node's bounding region. If not, the node cannot contain a closer donor — prune it.</div></li>
+        <li><div class="step-num">4</div><div class="step-body">Backtrack and visit only unpruned branches. Continue until all branches have been pruned or searched.</div></li>
+      </ul>
+      <div class="callout callout-tip">
+        <strong>Result:</strong> Large portions of the donor space are eliminated without checking individual records. This makes the search practical for large datasets.
+      </div>
+    </div>
+  </details>
+
+  <!-- K-D TREE VISUAL -->
+  <div class="demo-box" style="margin-top:16px">
+    <h3>k-d Tree Partition Visualizer</h3>
+    <p style="font-size:13px;color:var(--text3);margin-bottom:12px">Click anywhere on the canvas to place a <strong>recipient (★)</strong>. Donors are shown as blue circles. The k-d tree partitions space with red lines. The nearest donor (green highlight) is found by tree traversal.</p>
+    <canvas id="kd-canvas"></canvas>
+    <div style="margin-top:10px;display:flex;gap:16px;font-size:12px;color:var(--text3)">
+      <span>● Blue = donor</span>
+      <span>★ Click = recipient</span>
+      <span style="color:#2a8a40">● Green = nearest donor (L∞)</span>
+    </div>
+    <button onclick="resetKD()" style="margin-top:10px;padding:6px 14px;border:1px solid var(--border2);border-radius:6px;background:var(--bg2);font-size:13px;cursor:pointer">Reset donors</button>
+  </div>
+
+  <!-- DONOR SEARCH EXECUTION -->
+  <h3>Step 6 — Donor Selection &amp; Post-Imputation Edits</h3>
+  <p>Once the <em>n</em> nearest donor candidates are assembled, they are tested in order from closest to farthest:</p>
+
+  <ul class="steps">
+    <li><div class="step-num">1</div><div class="step-body">Check that the donor has <strong>no FTE flags</strong> on fields that would be imputed into the recipient.</div></li>
+    <li><div class="step-num">2</div><div class="step-body">Tentatively transfer the donor's FTI-field values into the recipient. Check whether the resulting record passes the <strong>post-imputation edits</strong>.</div></li>
+    <li><div class="step-num">3</div><div class="step-body">If the edited record passes — imputation is accepted. If not — try the next donor.</div></li>
+    <li><div class="step-num">4</div><div class="step-body">If all <em>n</em> candidates fail — report failure and move to the next recipient. No imputation performed.</div></li>
+  </ul>
+
+  <div class="two-col">
+    <div class="card">
+      <h4>Post-Imputation Edits</h4>
+      <p>Post-imputation edits are typically <em>relaxed versions</em> of the original edits. For example, an equality like <code>A + B = Total</code> is often replaced by a tolerance band: <code>|A + B − Total| ≤ 0.01 × Total</code>. This prevents the search from rejecting all donors simply because no donor happens to produce an exact total match.</p>
+    </div>
+    <div class="card">
+      <h4>Donor Usage Limits</h4>
+      <p>To prevent one record from being used as a donor for too many recipients (which would introduce artificial patterns), BANFF supports a <code>DONORLIMIT</code>:</p>
+      <div class="formula" style="font-size:12px">DONORLIMIT_j = max( NLIMIT, ⌈ MRL × #recipients_j / #donors_j ⌉ )</div>
+      <p>Once a donor reaches its limit, it is removed from the pool. If no parameter is set, there is no limit.</p>
+    </div>
+  </div>
+
+  <!-- RECIPIENTS WITH NO MATCHING FIELDS -->
+  <details>
+    <summary>Recipients with No Matching Fields</summary>
+    <div class="det-body">
+      <p>When no acceptable field of a recipient appears in the boundary-defining edits, there are <strong>no matching fields</strong>. The k-d tree cannot be used. Instead, BANFF draws donors <strong>at random</strong> (if the user enables this option).</p>
+      <p>Importantly, this rarely causes edit failures: when a recipient has no matching fields, the fields to be imputed are completely unconstrained by the recipient's known values. Therefore, any donor's values can typically be safely transferred — they are already internally consistent.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ESTIMATORS -->
+<section id="estimators">
+  <div class="section-tag purple">Estimators — Deep Dive</div>
+  <h2>Proc Estimator — Theory &amp; Algorithms</h2>
+
+  <p class="lead">While donor imputation preserves variable relationships by copying entire records, the Estimator procedure imputes <strong>one variable at a time</strong> using mathematical models — either estimator functions (direct formulas) or linear regression models. It supports 20 built-in algorithms plus user-defined ones.</p>
+
+  <div class="callout callout-warn">
+    <strong>Key trade-off:</strong> Because each variable is imputed independently, the imputed record may not pass the original edit constraints. Users must re-run ErrorLoc/DonorImputation afterwards to check and correct such failures.
+  </div>
+
+  <!-- TWO TYPES -->
+  <h3>Two Types of Algorithms</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>Type 1 — Estimator Functions</h4>
+      <p>Direct mathematical expressions involving current and/or historical values of the record being imputed, plus population means. Use four arithmetic operators and exponentiation.</p>
+      <p>Examples: <em>current mean of all respondents</em>, <em>previous survey value with trend adjustment</em>, <em>ratio to an auxiliary variable</em>.</p>
+      <div class="formula" style="font-size:12px">ŷᵢ꜀  =  f(yᵢ꜃, xᵢ꜀, xᵢ꜃, ȳ꜀, ȳ꜃, x̄꜀, x̄꜃, …)</div>
+    </div>
+    <div class="card">
+      <h4>Type 2 — Linear Regression Estimators</h4>
+      <p>Fit a linear model to respondent data, then predict the missing value. Coefficients are estimated by weighted least squares. A random residual can be added to preserve distributional variance.</p>
+      <div class="formula" style="font-size:12px">ŷᵢ꜀  =  β̂₀ + β̂₁x¹ᵢᵀ¹ + β̂₂x²ᵢᵀ² + … + β̂ₘxᵐᵢᵀₘ + ε̂ᵢ</div>
+    </div>
+  </div>
+
+  <!-- NOTATION -->
+  <h3>Notation Key</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>yᵢ꜀</code></td><td>Field being imputed for unit <em>i</em> in the current period C</td></tr>
+        <tr><td><code>yᵢ꜃</code></td><td>Same field for unit <em>i</em> in the historical (previous) period H</td></tr>
+        <tr><td><code>xᵢ꜀, xᵢ꜃</code></td><td>Auxiliary (proxy) variable for unit <em>i</em> in current / historical period</td></tr>
+        <tr><td><code>ȳ꜀, ȳ꜃</code></td><td>Population mean of the field to impute over all eligible respondents</td></tr>
+        <tr><td><code>x̄꜀, x̄꜃</code></td><td>Population mean of the auxiliary variable over all eligible respondents</td></tr>
+        <tr><td><code>β̂ⱼ</code></td><td>j-th regression coefficient estimated by weighted least squares</td></tr>
+        <tr><td><code>ε̂ᵢ</code></td><td>Random error term (residual from a randomly selected eligible record)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ALL 20 ALGORITHMS -->
+  <h3>All 20 Pre-Defined Algorithms</h3>
+
+  <h4 style="margin-top:20px;margin-bottom:10px">Estimator Functions (15 algorithms)</h4>
+  <div class="algo-grid">
+    <div class="algo-card">
+      <div class="algo-name">AUXTREND</div>
+      <div class="algo-eq">ŷᵢ꜀ = (xᵢ꜀ / xᵢ꜃) × yᵢ꜃</div>
+      <div class="algo-desc">Previous survey value, adjusted by the trend in an auxiliary variable. Best when the auxiliary tracks the variable of interest closely over time.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">AUXTREND2</div>
+      <div class="algo-eq">ŷᵢ꜀ = yᵢ꜃ / 2 × (x₁ᵢ꜀/x₁ᵢ꜃ + x₂ᵢ꜀/x₂ᵢ꜃)</div>
+      <div class="algo-desc">Average of two separate AUXTREND adjustments using two different auxiliary variables. Reduces reliance on a single proxy.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">CURAUX</div>
+      <div class="algo-eq">ŷᵢ꜀ = xᵢ꜀</div>
+      <div class="algo-desc">Substitute the current value of a proxy variable directly. Used when an administrative variable is a near-perfect substitute.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">CURAUXMEAN</div>
+      <div class="algo-eq">ŷᵢ꜀ = x̄꜀</div>
+      <div class="algo-desc">Impute the current mean of a proxy variable (not the unit's own proxy value, but the group average).</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">CURMEAN</div>
+      <div class="algo-eq">ŷᵢ꜀ = ȳ꜀</div>
+      <div class="algo-desc">Replace the missing value with the current group mean. Simple and robust — the classic mean imputation.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">CURRATIO</div>
+      <div class="algo-eq">ŷᵢ꜀ = (ȳ꜀ / x̄꜀) × xᵢ꜀</div>
+      <div class="algo-desc">Ratio estimate: scale the unit's auxiliary value by the group ratio of the target mean to the auxiliary mean.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">CURRATIO2</div>
+      <div class="algo-eq">ŷᵢ꜀ = ȳ꜀/2 × (x₁ᵢ꜀/x̄₁꜀ + x₂ᵢ꜀/x̄₂꜀)</div>
+      <div class="algo-desc">Average of two CURRATIO estimates using two different auxiliary variables.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">CURSUM2 / 3 / 4</div>
+      <div class="algo-eq">ŷᵢ꜀ = u + v [+ w [+ z]]</div>
+      <div class="algo-desc">Sum of two, three, or four auxiliary variables. Used when the target variable is a known aggregate of sub-components that are available.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">DIFTREND</div>
+      <div class="algo-eq">ŷᵢ꜀ = (ȳ꜀ / ȳ꜃) × yᵢ꜃</div>
+      <div class="algo-desc">Previous survey value adjusted by the overall trend in the target variable across all respondents. Similar to AUXTREND but uses the field itself (not an auxiliary) to measure trend.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">PREAUX</div>
+      <div class="algo-eq">ŷᵢ꜀ = xᵢ꜃</div>
+      <div class="algo-desc">Impute the historical (previous-period) value of a proxy variable for the same unit.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">PREAUXMEAN</div>
+      <div class="algo-eq">ŷᵢ꜀ = x̄꜃</div>
+      <div class="algo-desc">Impute the historical mean of a proxy variable (group average, not unit-specific).</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">PREMEAN</div>
+      <div class="algo-eq">ŷᵢ꜀ = ȳ꜃</div>
+      <div class="algo-desc">Impute the mean from the previous survey. Useful when no current auxiliary is available but historical data exists.</div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-name">PREVALUE</div>
+      <div class="algo-eq">ŷᵢ꜀ = yᵢ꜃</div>
+      <div class="algo-desc">Carry forward the previous-survey value for the same unit. Simple but effective for variables with high autocorrelation over time.</div>
+    </div>
+  </div>
+
+  <h4 style="margin-top:24px;margin-bottom:10px">Linear Regression Estimators (5 algorithms)</h4>
+  <div class="algo-grid">
+    <div class="algo-card" style="border-left:3px solid var(--purple)">
+      <div class="algo-name">CURREG</div>
+      <div class="algo-eq">ŷᵢ꜀ = β̂₀ + β̂₁xᵢ꜀</div>
+      <div class="algo-desc">Simple OLS regression on one current auxiliary variable. Coefficients estimated from all eligible respondents in the current period.</div>
+    </div>
+    <div class="algo-card" style="border-left:3px solid var(--purple)">
+      <div class="algo-name">CURREG_E2</div>
+      <div class="algo-eq">ŷᵢ꜀ = β̂₀ + β̂₁xᵢ꜀ + β̂₂xᵢ꜀²</div>
+      <div class="algo-desc">Quadratic regression. Adds the squared term of the auxiliary variable to capture non-linear relationships.</div>
+    </div>
+    <div class="algo-card" style="border-left:3px solid var(--purple)">
+      <div class="algo-name">CURREG2</div>
+      <div class="algo-eq">ŷᵢ꜀ = β̂₀ + β̂₁uᵢ꜀ + β̂₂vᵢ꜀</div>
+      <div class="algo-desc">Multiple linear regression with two current independent variables.</div>
+    </div>
+    <div class="algo-card" style="border-left:3px solid var(--purple)">
+      <div class="algo-name">CURREG3</div>
+      <div class="algo-eq">ŷᵢ꜀ = β̂₀ + β̂₁uᵢ + β̂₂vᵢ + β̂₃wᵢ</div>
+      <div class="algo-desc">Multiple linear regression with three current independent variables.</div>
+    </div>
+    <div class="algo-card" style="border-left:3px solid var(--purple)">
+      <div class="algo-name">HISTREG</div>
+      <div class="algo-eq">ŷᵢ꜀ = β̂₀ + β̂₁yᵢ꜃</div>
+      <div class="algo-desc">Regression of current value on historical value for the same variable. Combines carry-forward logic with calibration.</div>
+    </div>
+  </div>
+
+  <!-- REGRESSION THEORY -->
+  <h3>Regression Theory — Parameter Estimation</h3>
+  <p>For all regression algorithms, BANFF estimates coefficients using <strong>weighted least squares (WLS)</strong>. This generalises ordinary OLS to handle heteroscedasticity and survey weights.</p>
+
+  <div class="formula">Model:   Y = Xβ + ε
+
+Matrix solution:   β̂ = (XᵀDX)⁻¹ XᵀDY
+
+where:
+  X  = design matrix (rows = eligible records, columns = intercept + auxiliary variables)
+  Y  = column vector of current values for the variable being imputed
+  D  = diagonal weight matrix: D_ii = w_i / v_i^p
+
+  w_i  = record weight (1 if unweighted)
+  v_i  = model variance variable (1 if not specified)
+  p    = variance exponent</div>
+
+  <div class="callout callout-info">
+    <strong>Weighted means</strong> used by estimator functions follow the same principle: <code>ȳ꜀ = Σ(wᵢ × yᵢ꜀) / Σwᵢ</code> over all eligible records.
+  </div>
+
+  <!-- RANDOM ERROR TERM -->
+  <h3>Random Error Term</h3>
+  <p>A key concern with any deterministic imputation method is that it <em>reduces variance</em> in the dataset — all imputed records receive the same predicted value for similar covariate profiles, producing an unrealistically smooth distribution. BANFF addresses this with an optional random error term:</p>
+
+  <div class="formula">ε̂ᵢ = R_J × √(vᵢᵀ_final / vⱼᵀ_final)
+
+where:
+  R_J     = residual of randomly selected eligible record J = (y_J − ŷ_J)
+  v       = model variance variable (1 if not specified)
+  T_final = final time period in the regression model</div>
+
+  <p>The process: (1) compute the predicted value ŷ, (2) randomly select one eligible record J (weighted by survey weights if applicable), (3) compute J's residual, (4) scale by the variance ratio, (5) add to ŷ.</p>
+
+  <div class="callout callout-tip">
+    <strong>Effect:</strong> The random residual reintroduces the natural variability present in the respondent data. The distribution of imputed values more closely resembles the distribution of reported values — important for variance estimation and analysis of the imputed dataset.
+  </div>
+
+  <!-- PARAMETER EXCLUSION -->
+  <h3>Controlling Which Records Contribute to Parameters</h3>
+  <p>BANFF gives the analyst fine-grained control over which records are used to estimate means and regression coefficients:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Exclusion Type</th><th>What is excluded</th><th>Typical rationale</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-amber">FTE exclusion</span></td>
+          <td>Records with outlier-flagged values in the field to impute or auxiliary variables</td>
+          <td>Outliers would distort means and regression slopes</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-amber">Previously imputed</span></td>
+          <td>Records whose relevant fields were imputed in earlier procedures</td>
+          <td>Ensures parameters are based purely on respondent data</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-amber">User exclusion variable</span></td>
+          <td>Records where a user-specified condition is true in current or historical file</td>
+          <td>Exclude atypical units, known errors, or out-of-scope records</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gray">Automatic exclusion</span></td>
+          <td>Records missing data in any variable required by the algorithm</td>
+          <td>Ensures numerator and denominator of ratio estimators use identical record sets</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>Important:</strong> Parameters are calculated <em>once before imputation starts</em> and remain fixed throughout the execution. Newly imputed values during a run do not feed back into parameter calculations. Only values imputed in <em>previous</em> executions of Proc Estimator are available.
+  </div>
+
+  <!-- FALLBACK CHAINS -->
+  <h3>Algorithm Fallback Chains</h3>
+  <p>Multiple algorithms can be specified for the same variable in one execution. BANFF tries them in sequence: if Algorithm 1 cannot produce a valid value (e.g., auxiliary variable is missing), it tries Algorithm 2, and so on.</p>
+
+  <div class="card">
+    <h4>Example Fallback Chain</h4>
+    <p style="font-size:13px">Impute <code>Revenue</code> for non-respondents:</p>
+    <ol style="font-size:13px;color:var(--text2);padding-left:20px;line-height:2">
+      <li><strong>AUXTREND</strong> — use prior-year revenue adjusted by employment trend <em>(requires both historical Revenue and current Employment)</em></li>
+      <li><strong>PREVALUE</strong> — carry forward prior-year revenue <em>(requires historical Revenue only)</em></li>
+      <li><strong>CURMEAN</strong> — use current group mean <em>(always available)</em></li>
+    </ol>
+    <p style="font-size:13px">Records for which Algorithm 1 fails (e.g., first-year respondents with no historical data) automatically fall through to Algorithm 2, and so on.</p>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="comparison">
+  <div class="section-tag amber">Comparison</div>
+  <h2>Imputation Method Comparison</h2>
+  <p>Choosing the right imputation method depends on what structure you want to preserve in the data. Here is a summary of the four BANFF imputation procedures:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Unit of Imputation</th>
+          <th>Preserves Relationships</th>
+          <th>Requires Auxiliary Data</th>
+          <th>Theoretical Basis</th>
+          <th>Best Used When</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Deterministic</strong></td>
+          <td>Individual fields</td>
+          <td>Exact edit satisfaction</td>
+          <td>No — uses edit structure only</td>
+          <td>Constraint propagation</td>
+          <td>Edit system uniquely determines the missing value</td>
+        </tr>
+        <tr>
+          <td><strong>Donor Imputation</strong></td>
+          <td>Full edit group</td>
+          <td>Yes — all fields from same donor</td>
+          <td>Yes — matching fields, auxiliary variables</td>
+          <td>Nearest-neighbour hot deck (L∞, k-d tree)</td>
+          <td>Multivariate relationships matter; sufficient donor pool exists</td>
+        </tr>
+        <tr>
+          <td><strong>Estimators</strong></td>
+          <td>One variable at a time</td>
+          <td>Partial — model-based correlations only</td>
+          <td>Yes — auxiliary or historical variables</td>
+          <td>Ratio estimation, OLS/WLS regression</td>
+          <td>Good auxiliary data exists; edit failures after imputation are acceptable</td>
+        </tr>
+        <tr>
+          <td><strong>Prorate</strong></td>
+          <td>Component sub-totals</td>
+          <td>Additive consistency enforced</td>
+          <td>No — uses totals only</td>
+          <td>Proportional scaling (raking)</td>
+          <td>Post-imputation cleanup of additive edit failures</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-top:28px">Missing Data Theory — Where Each Method Stands</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>MCAR / MAR considerations</h4>
+      <p>BANFF does not explicitly model the missing data mechanism. However:</p>
+      <ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:1.9">
+        <li><strong>Donor Imputation</strong> is robust under MAR when matching fields capture the reason for missingness</li>
+        <li><strong>Estimators</strong> are consistent under MAR when the auxiliary variables explain missingness</li>
+        <li>Neither method handles MNAR without external corrections</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Variance Preservation</h4>
+      <p>Single imputation systematically underestimates variance. BANFF's mitigations:</p>
+      <ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:1.9">
+        <li><strong>Donor Imputation</strong> preserves empirical distribution (copies real values)</li>
+        <li><strong>Estimators + random error</strong> reintroduce residual variance from respondents</li>
+        <li>Neither is equivalent to multiple imputation for variance estimation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>Recommended sequence for complex surveys:</strong> Run Deterministic first (catches uniquely-solvable cases), then DonorImputation (handles multivariate records), then Estimator (for remaining individual fields), then Prorate (additive cleanup).
+  </div>
+
+  <hr>
+
+  <h3>Quick Reference — All Estimator Algorithms</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Algorithm</th><th>Type</th><th>Data Required</th><th>Use Case</th></tr></thead>
+      <tbody>
+        <tr><td><code>PREVALUE</code></td><td>EF</td><td>Historical value of same variable</td><td>Stable time series; first fallback</td></tr>
+        <tr><td><code>PREMEAN</code></td><td>EF</td><td>Historical mean</td><td>No unit history; group-level trend</td></tr>
+        <tr><td><code>CURMEAN</code></td><td>EF</td><td>Current respondent values</td><td>Simple mean imputation; last resort</td></tr>
+        <tr><td><code>DIFTREND</code></td><td>EF</td><td>Current &amp; historical values</td><td>Trend adjustment using field itself</td></tr>
+        <tr><td><code>AUXTREND</code></td><td>EF</td><td>Historical value + aux variable</td><td>Trend via correlated auxiliary</td></tr>
+        <tr><td><code>AUXTREND2</code></td><td>EF</td><td>Historical value + 2 aux variables</td><td>Smoother trend using two proxies</td></tr>
+        <tr><td><code>CURRATIO</code></td><td>EF</td><td>Current aux variable + mean</td><td>Ratio estimate from single proxy</td></tr>
+        <tr><td><code>CURRATIO2</code></td><td>EF</td><td>Current values of 2 aux variables</td><td>Average of two ratio estimates</td></tr>
+        <tr><td><code>CURAUX</code></td><td>EF</td><td>Current aux value</td><td>Direct proxy substitution</td></tr>
+        <tr><td><code>CURAUXMEAN</code></td><td>EF</td><td>Current aux mean</td><td>Group-level proxy mean</td></tr>
+        <tr><td><code>PREAUX</code></td><td>EF</td><td>Historical aux value</td><td>Historical proxy carry-forward</td></tr>
+        <tr><td><code>PREAUXMEAN</code></td><td>EF</td><td>Historical aux mean</td><td>Historical group proxy mean</td></tr>
+        <tr><td><code>CURSUM2/3/4</code></td><td>EF</td><td>2, 3, or 4 current aux variables</td><td>Known aggregate of sub-components</td></tr>
+        <tr><td><code>CURREG</code></td><td>LR</td><td>1 current aux + respondent records</td><td>Simple regression with current data</td></tr>
+        <tr><td><code>CURREG_E2</code></td><td>LR</td><td>1 current aux (quadratic)</td><td>Non-linear relationships</td></tr>
+        <tr><td><code>CURREG2</code></td><td>LR</td><td>2 current aux variables</td><td>Multiple linear regression</td></tr>
+        <tr><td><code>CURREG3</code></td><td>LR</td><td>3 current aux variables</td><td>Multiple linear regression (3 vars)</td></tr>
+        <tr><td><code>HISTREG</code></td><td>LR</td><td>Historical value of same variable</td><td>Regression-calibrated carry-forward</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>
+
+</div><!-- /page -->
+
+<script>
+/* NAV ACTIVE STATE */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a[href^="#"]');
+function setActive() {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
+  navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
+}
+window.addEventListener('scroll', setActive, { passive: true });
+setActive();
+
+/* DISTANCE CALCULATOR */
+function calcDist() {
+  const r = [+document.getElementById('r1').value, +document.getElementById('r2').value, +document.getElementById('r3').value];
+  const d = [+document.getElementById('d1').value, +document.getElementById('d2').value, +document.getElementById('d3').value];
+  ['r1','r2','r3','d1','d2','d3'].forEach((id,i) => {
+    document.getElementById(id+'v').textContent = (([...r,...d][i])/100).toFixed(2);
+  });
+  const diffs = r.map((v,i) => Math.abs(v - d[i]) / 100);
+  const dist = Math.max(...diffs).toFixed(4);
+  document.getElementById('dist-out').textContent = dist;
+  const names = ['x₁','x₂','x₃'];
+  document.getElementById('dist-breakdown').textContent =
+    'max(' + diffs.map((v,i) => `|${(r[i]/100).toFixed(2)}−${(d[i]/100).toFixed(2)}|`).join(', ') + ') = max(' +
+    diffs.map(v => v.toFixed(2)).join(', ') + ') = ' + dist;
+}
+calcDist();
+
+/* K-D TREE VISUALIZER */
+const canvas = document.getElementById('kd-canvas');
+const ctx = canvas.getContext('2d');
+let donors = [];
+let recipient = null;
+
+function makeRandDonors() {
+  donors = [];
+  for (let i = 0; i < 18; i++) donors.push({ x: 0.05 + Math.random() * 0.9, y: 0.05 + Math.random() * 0.9 });
+  recipient = null;
+  drawKD();
+}
+
+function getRC(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return { x: ((e.clientX - rect.left) * scaleX) / canvas.width, y: ((e.clientY - rect.top) * scaleY) / canvas.height };
+}
+
+function linfDist(a, b) { return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y)); }
+
+function buildKD(pts, depth = 0) {
+  if (!pts.length) return null;
+  const axis = depth % 2 === 0 ? 'x' : 'y';
+  pts = [...pts].sort((a, b) => a[axis] - b[axis]);
+  const mid = Math.floor(pts.length / 2);
+  return { point: pts[mid], axis, left: buildKD(pts.slice(0, mid), depth + 1), right: buildKD(pts.slice(mid + 1), depth + 1) };
+}
+
+function drawKDLines(node, xmin, xmax, ymin, ymax) {
+  if (!node) return;
+  const W = canvas.width, H = canvas.height;
+  ctx.strokeStyle = 'rgba(180,40,40,0.45)';
+  ctx.setLineDash([4, 3]);
+  ctx.lineWidth = 1;
+  if (node.axis === 'x') {
+    const px = node.point.x * W;
+    ctx.beginPath(); ctx.moveTo(px, ymin * H); ctx.lineTo(px, ymax * H); ctx.stroke();
+    drawKDLines(node.left, xmin, node.point.x, ymin, ymax);
+    drawKDLines(node.right, node.point.x, xmax, ymin, ymax);
+  } else {
+    const py = node.point.y * H;
+    ctx.beginPath(); ctx.moveTo(xmin * W, py); ctx.lineTo(xmax * W, py); ctx.stroke();
+    drawKDLines(node.left, xmin, xmax, ymin, node.point.y);
+    drawKDLines(node.right, xmin, xmax, node.point.y, ymax);
+  }
+}
+
+function drawKD() {
+  const W = canvas.width = canvas.offsetWidth;
+  const H = canvas.height = 300;
+  ctx.clearRect(0, 0, W, H);
+  ctx.setLineDash([]);
+
+  // Background
+  ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg') || '#fafaf8';
+  ctx.fillRect(0, 0, W, H);
+
+  // KD partition lines
+  if (donors.length > 1) {
+    const tree = buildKD(donors);
+    drawKDLines(tree, 0, 1, 0, 1);
+  }
+
+  ctx.setLineDash([]);
+
+  // Find nearest to recipient
+  let nearest = null;
+  if (recipient) {
+    let minD = Infinity;
+    donors.forEach(d => { const dist = linfDist(recipient, d); if (dist < minD) { minD = dist; nearest = d; } });
+    // Draw L-inf ball
+    ctx.strokeStyle = 'rgba(42,138,64,0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.strokeRect((recipient.x - minD) * W, (recipient.y - minD) * H, minD * 2 * W, minD * 2 * H);
+    ctx.setLineDash([]);
+  }
+
+  // Donors
+  donors.forEach(d => {
+    const isNearest = nearest && d === nearest;
+    ctx.beginPath();
+    ctx.arc(d.x * W, d.y * H, isNearest ? 10 : 7, 0, Math.PI * 2);
+    ctx.fillStyle = isNearest ? 'rgba(42,138,64,0.8)' : 'rgba(44,74,138,0.7)';
+    ctx.fill();
+    ctx.strokeStyle = isNearest ? '#1a6628' : '#1a3a6a';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
+  // Recipient
+  if (recipient) {
+    ctx.fillStyle = '#cc4400';
+    ctx.font = `bold ${Math.round(W/30)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('★', recipient.x * W, recipient.y * H);
+    if (nearest) {
+      ctx.strokeStyle = 'rgba(42,138,64,0.6)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 3]);
+      ctx.beginPath();
+      ctx.moveTo(recipient.x * W, recipient.y * H);
+      ctx.lineTo(nearest.x * W, nearest.y * H);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      const d = linfDist(recipient, nearest).toFixed(3);
+      ctx.fillStyle = '#0f6e56';
+      ctx.font = `12px sans-serif`;
+      ctx.fillText(`d = ${d}`, (recipient.x + nearest.x) / 2 * W, (recipient.y + nearest.y) / 2 * H - 8);
+    }
+  }
+}
+
+canvas.addEventListener('click', e => {
+  const { x, y } = getRC(e);
+  recipient = { x, y };
+  drawKD();
+});
+
+function resetKD() { makeRandDonors(); }
+makeRandDonors();
+window.addEventListener('resize', drawKD);
+</script>
+
+</body>
+</html>
